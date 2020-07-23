@@ -1,12 +1,13 @@
 from tkinter import Tk, PhotoImage
 import Matrizes
 
-class Tela(Tk):
+class Tela(Tk): #matheus
     def __init__(self):
         super().__init__()
         self.title("Batalha Naval")
         self.iconphoto(True, PhotoImage("icons/Battleship.ico"))
         self.state("normal")
+        self.criaTelaMenu()
         self.mainloop()
 
     def criaMatrizDeBotao(self, player):
@@ -17,11 +18,12 @@ class Tela(Tk):
         pass
 
     def criaTelaMenu(self):
+        
         pass
 
     def criaTelaConfigurações(self):
         pass
-    
+
     def Sandbox(self):
         pass
 
