@@ -8,7 +8,7 @@ class Matriz:
                 yield x,y
 
     def defineTamanhoMatriz(self):
-        espacos=(self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2)/(1-self.pma)
+        espacos=(self.navios[0]*5+self.navios[1]*4+self.navios[2]*3+self.navios[3]*3+self.navios[4]*2)/(1-self.pma)
         n=int(espacos**0.5) + 1  
         return n
     
