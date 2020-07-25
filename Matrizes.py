@@ -32,21 +32,16 @@ class Matriz:
         espaco_navio=(5, 4, 3, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
         n=self.defineTamanhoMatriz()
         matriz_navios=[[0 for i in range(self.getN())] for i in range(n)]
-        print("n= {}".format(str(n)))
         i=0 #Tipo de navio
         qtde_navios=sum(self.navios) #quantidade total de navios
         tipo=self.navios[i] #quantidade de um tipo de navio
         while(qtde_navios>0):
-            print("Quantidade de navios = {}".format(str(qtde_navios)))
             if(tipo==0): #verifica se foram alocados todos os navios de um tipo
                 i+=1  
                 tipo=self.navios[i]
-                print("Passou para o próximo tipo") 
             verifica=0 
             pos=randint(0,1)   #posição 1:horizontal 0:vertical
-            print("Posição = {}".format(str(pos)))
             c_i=[randint(0,n-1),randint(0,n-1)] #coordenada inicial e final inicializadas
-            print("Coordenada_i = {}".format(str(c_i)))
             c_f=c_i.copy()
             step=1 
             c=0 #Corrige o calculo do espaço do navio para o caso de a coordenada ser 0
@@ -62,7 +57,6 @@ class Matriz:
             if(verifica<2): 
                 qtde_navios-=1
                 tipo-=1
-                print("Espaços do navio = {}".format(str(espaco_navio[i])))
                 for x in range(espaco_navio[i]):
                     matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=1  #alocando o navio 
         return matriz_navios
