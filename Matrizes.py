@@ -33,7 +33,60 @@ class Matriz:
             #cruiser = 3 espaços
             #submarine = 3 espaços
             #destroyer = 2 espaços
-        pass
+        #carrier = 5 espaços
+        #battleship = 4 espaços
+        #cruiser = 3 espaços
+        #submarine = 3 espaços
+        #destroyer = 2 espaços
+        espaco_navio=(5, 4, 3, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
+        n=self.defineTamanhoMatriz()
+        i=0 #Tipo de navio
+        qtde_navios=sum(self.navios) #quantidade total de navios
+        tipo=self.navios[i] #quantidade de um tipo de navio
+        while(qtde_navios>0):
+            print("Quantidade de navios = {}".format(str(qtde_navios)))
+            if(tipo==0): #verifica se foram alocados todos os navios de um tipo
+                i+=1  
+                tipo=self.navios[i]
+                print("Passou para o próximo tipo") 
+            verifica=0 #Variável para verificar se a posição contêm um 0 ou 1
+            pos=randint(1,2)   #posição 1:horizontal 2:vertical
+            print("Posição = {}".format(str(pos)))
+            coordenada_i=randint(0,n**2-1) #coordenada inicial e final inicializadas
+            print("Coordenada = {}".format(str(coordenada_i)))
+            coordenada_f=coordenada_i
+            linha=int(coordenada_i/n)+1 #determina a linha da coordenada aleatória
+            coluna=int(coordenada_i%n)  #determina a coluna da coordenada aleatória
+            if(pos==1):
+                step=1 #percorre as colunas
+            else:
+                step=n #percorre as linhas
+            while(verifica!=2 and (coordenada_f-coordenada_i)<=espaco_navio[i]): 
+                if(pos==1): #procura na horizontal
+                    if((player.MatrizPlayer[coordenada_f][2]==0) and (coordenada_f+step)<(linha*n) and (coordenada_f+step)>=((linha-1)*n)): #verifica se o proximo passo está dentro do limite 
+                        coordenada_f+=step                                                                                                  #de linha
+                    else:
+                        verifica+=1 
+                        coordenada_f=coordenada_i #repensar
+                        step*=-1 #inverte o sentido
+                else:  #procura na vertical
+                    if((player.MatrizPlayer[coordenada_f][2]==0) and (coordenada_f+step)<(n**2-(n-coluna)) and (coordenada_f+step)>=coluna): #verifica se o proximo passo está dentro do limite 
+                        coordenada_f+=step                                                                                                   #de coluna
+                    else:
+                        verifica+=1 
+                        coordenada_f=coordenada_i
+                        step*=-1
+            if(verifica<2): 
+                qtde_navios-=1
+                tipo-=1
+                x=0
+                print("Espaços do navio = {}".format(str(espaco_navio[i])))
+                print("Step = {}".format(str(step)))
+                while(x<espaco_navio[i]):
+                    player.MatrizPlayer[coordenada_i+(step*x)][2]=1  #alocando o navio 
+                    x+=1
+                print(player.MatrizPlayer)
+        return
 
     def checaTiro(self, coordenada, mat): #tentar substituir x e y por coordenada
         if mat[coordenada[0]][coordenada[1]] == 1: 
