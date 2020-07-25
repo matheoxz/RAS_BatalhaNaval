@@ -16,13 +16,13 @@ class Matriz:
         n=self.defineTamanhoMatriz()
         return n
 
-    def __init__(self, pma, navios):#navios idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
+    def __init__(self, pma, navios):
         self.pma=pma #percentual mínimo de espaços com água em relação ao total
         self.navios=navios  #lista contendo a qtde de cada navio
-        self.MatrizPlayer = [[x, y, 0] for x, y in self.geraMatriz(self.defineTamanhoMatriz())] #retorna um valor de n conforme a qtde
-        self.MatrizBot = [[x, y, 0] for x, y in self.geraMatriz(self.defineTamanhoMatriz())]    #de navios escolhida
+        self.MatrizPlayer = [[0 for i in range(self.getN())] for i in range(self.getN())] #retorna um valor de n conforme a qtde
+        self.MatrizBot = [[0 for i in range(self.getN())] for i in range(self.getN())]    #de navios escolhida
         return
-
+    #'''
     def alocaNavios(self, player, carrier = 1, battleship = 1, cruiser = 1, submarine = 1, destroyer = 1): #gustavo e marcos
         #poe navios na matriz de maneira aleatoria
         #deve checar o tamanho do navio e a quantidade destes
@@ -35,8 +35,11 @@ class Matriz:
             #destroyer = 2 espaços
         pass
 
-    def checaTiro(self, coordenada): #lucas e iris, checar se o tiro sorteado acertou um navio ou a agua
-        pass
+    def checaTiro(self, coordenada, mat): #tentar substituir x e y por coordenada
+        if mat[coordenada[0]][coordenada[1]] == 1: 
+            print("navio")
+        else:
+            print("agua")
 
     def geraTiro(self):
         n=self.defineTamanhoMatriz()
@@ -50,9 +53,10 @@ class Matriz:
 
 l=[4, 1, 1, 1, 1]
 m=Matriz(0.6,l)
+
+#print(m.checaTiro(1,1, m.MatrizPlayer))
+coord = m.geraTiro()
+print(coord)
+m.checaTiro(coord, m.MatrizPlayer)
 #m.alocaNavios(m)
-print(m.getN())
-
-
-
-
+#print(m.getN())
