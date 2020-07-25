@@ -64,9 +64,8 @@ class Matriz:
                 tipo-=1
                 x=0
                 print("Espaços do navio = {}".format(str(espaco_navio[i])))
-                while(x<espaco_navio[i]):
+                for x in range(espaco_navio[i]):
                     matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=1  #alocando o navio 
-                    x+=1
         return matriz_navios
 
     def checaTiro(self, coordenada, mat): #tentar substituir x e y por coordenada
