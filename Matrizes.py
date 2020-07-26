@@ -37,36 +37,37 @@ class Matriz:
         #submarine = 3 espaços
         #destroyer = 2 espaços
         espaco_navio=(5, 4, 3, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
-        n=self.defineTamanhoMatriz()
-        matriz_navios=[[0 for i in range(self.getN())] for i in range(n)]
+        n=self.getN()
+        matriz_navios=[[0 for i in range(n)] for i in range(n)]
         i=0 #Tipo de navio
         qtde_navios=sum(self.navios) #quantidade total de navios
         tipo=self.navios[i] #quantidade de um tipo de navio
         while(qtde_navios>0):
-            if(tipo==0): #verifica se foram alocados todos os navios de um tipo
+            while(tipo==0):
                 i+=1  
                 tipo=self.navios[i]
             verifica=0 
             pos=randint(0,1)   #posição 1:horizontal 0:vertical
             c_i=[randint(0,n-1),randint(0,n-1)] #coordenada inicial e final inicializadas
             c_f=c_i.copy()
-            step=1 
-            c=0 #Corrige o calculo do espaço do navio para o caso de a coordenada ser 0
-            while(verifica!=2 and (abs(c_f[pos]-c_i[pos])+c)<espaco_navio[i]): 
-                if((matriz_navios[c_f[0]][c_f[1]]==0) and (c_f[pos]+step)<n and (c_f[pos]+step)>=0): 
-                    c_f[pos]+=step                                                                                               
+            step=1 #define o sentido da busca
+            espacos_alocados=0 
+            while(verifica!=2 and espacos_alocados<espaco_navio[i]): 
+                if(matriz_navios[c_f[0]][c_f[1]]==0 and c_f[pos]!=-1):
+                    espacos_alocados+=1
+                    c_f[pos]= c_f[pos]+step if((c_f[pos]+step)<n and (c_f[pos]+step)>=0) else -1                                                                                                
                 else:
                     verifica+=1 
-                    c_f=c_i.copy()  #isso pode fazer a alocação de barcos ficar bem mais demorada
+                    espacos_alocados=0
+                    c_f=c_i.copy()  #isso pode fazer a alocação ficar bem mais demorada
                     #c_i=c_f.copy()
                     step*=-1 #inverte o sentido
-                c= 1 if(c_f[pos]==0 or c_i[pos]==0) else 0
-            if(verifica<2): 
+            if(verifica<2): #Caso verifica <2 há a possiblidade de alocar o navio no sentido determinado pelo step
                 qtde_navios-=1
                 tipo-=1
                 for x in range(espaco_navio[i]):
                     matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=1  #alocando o navio 
-        return matriz_navios
+        return matriz_navios #retorna uma matriz com os navios alocados para poder ser atribuida a matriz do bot/player
 
     def checaTiro(self, coordenada, mat): #tentar substituir x e y por coordenada
         if mat[coordenada[0]][coordenada[1]] == 1: 
@@ -84,8 +85,8 @@ class Matriz:
 
     
 
-l=[1, 0, 0, 0, 0]
-m=Matriz(0.6,l)
+l=[1, 1, 0, 0, 1]
+m=Matriz(0,l)
 print(m.alocaNavios())
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()
