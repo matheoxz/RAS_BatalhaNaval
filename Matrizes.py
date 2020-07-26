@@ -9,7 +9,14 @@ class Matriz:
 
     def defineTamanhoMatriz(self):
         espacos=(self.navios[0]*5+self.navios[1]*4+self.navios[2]*3+self.navios[3]*3+self.navios[4]*2)/(1-self.pma)
-        n=int(espacos**0.5) + 1  
+        if(self.navios[0]!=0 and espacos<25):
+            n=5
+        elif(self.navios[1]!=0 and espacos<16):
+            n=4
+        elif((self.navios[2]!=0 or self.navios[3]!=0) and espacos<9):
+            n=3
+        else:
+            n=int(espacos**0.5)+1
         return n
     
     def getN(self):
@@ -77,7 +84,7 @@ class Matriz:
 
     
 
-l=[4, 1, 1, 1, 1]
+l=[1, 0, 0, 0, 0]
 m=Matriz(0.6,l)
 print(m.alocaNavios())
 #print(m.checaTiro(1,1, m.MatrizPlayer))
