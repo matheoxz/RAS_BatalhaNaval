@@ -4,7 +4,7 @@ from functools import partial
 
 class Tela(Tk):
     #pencertual medio de agua desejado 
-    pma = 0.3
+    pma = 0.5
     #numero de navios que devem se inicializar a matriz, por padrão é apenas 1
     navios = [1 for i in range(5)]
 
@@ -32,15 +32,26 @@ class Tela(Tk):
                 self.matriz_inimiga[x][y].configure(bg = "#FF415A", state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
-        
+            
+            if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2)):
+                print("ganhou!")
+
         else:
             mat = self.tabuleiro.MatrizPlayer
             self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
+
             if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
+                #self.tiros_errados_bot +=1
 
             elif(self.tabuleiro.checaTiro(x, y, mat) == 1):
                 self.matriz_amiga[x][y].configure(bg = "#FF415A", state = DISABLED)
+                #self.tiros_acertados_bot +=1
+
+            #if (self.tiros_acertados_bot== (navios[0]*5 + navios[1]*4 + navios[2]*3 + navios[3]*3 + navios[4]*2)):
+                #print("perdeu!")
+
+
         
     def criaMatrizDeBotao(self, frame, matriz_botoes, jogador):
         #pega o valor de n que for dado na tela de menu
