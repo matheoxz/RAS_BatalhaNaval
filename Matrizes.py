@@ -72,12 +72,7 @@ class Matriz:
         return matriz_navios #retorna uma matriz com os navios alocados para poder ser atribuida a matriz do bot/player
 
     def checaTiro(self, x, y, mat): 
-        if (mat[x][y] == 1): 
-            print("navio")
-            return 1
-        else:
-            print("agua")
-            return 0
+        return mat[x][y]
 
     def geraTiro(self):
         n=self.defineTamanhoMatriz()

@@ -18,7 +18,7 @@ class Tela(Tk):
 
     def checaTiro(self, x, y, jogador):
         if(jogador == 'Player'):
-            mat = self.tabuleiro.MatrizPlayer
+            mat = self.tabuleiro.MatrizBot
             print('Player', x,y)
             self.tiros_dados_player += 1
             self.tiros_dados_player_lbl.configure(text = str(self.tiros_dados_player))
@@ -34,7 +34,7 @@ class Tela(Tk):
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
         
         else:
-            mat = self.tabuleiro.MatrizBot
+            mat = self.tabuleiro.MatrizPlayer
             self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
             if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
@@ -82,7 +82,7 @@ class Tela(Tk):
         Label(frame, text = 'Carrier (5 espaços): ').grid(row = 1, column = 0, sticky = W)
         Label(frame, text = 'Battleship (4 espaços): ').grid(row = 2, column = 0, sticky = W)
         Label(frame, text = 'Cruiser (3 espaços): ').grid(row = 3, column = 0, sticky = W)
-        Label(frame, text = 'Submarine (2 espaços): ').grid(row = 4, column = 0, sticky = W)
+        Label(frame, text = 'Submarine (3 espaços): ').grid(row = 4, column = 0, sticky = W)
         Label(frame, text = 'Destroyer (2 espaços): ').grid(row = 5, column = 0, sticky = W)
         Label(frame, text = 'Percentual de água: ').grid(row = 6, column = 0, sticky = W)
         #insere entradas
@@ -128,6 +128,7 @@ class Tela(Tk):
             Label(frame_tabuleiro, text = i).grid(row = j+1, column = 0)
         #cria matriz de botoes
         self.matriz_inimiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        #self.matriz_inimiga = self.tabuleiro.alocaNavios()
         self.criaMatrizDeBotao(frame_tabuleiro, self.matriz_inimiga, 'Player')
         frame_tabuleiro.pack()
         #cria labels de pontuação
@@ -166,6 +167,7 @@ class Tela(Tk):
             Label(frame_tabuleiro, text = i).grid(row = j+1, column = 0)
         #cria matriz inimiga
         self.matriz_inimiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        #self.matriz_inimiga = self.tabuleiro.alocaNavios()
         self.criaMatrizDeBotao(frame_tabuleiro, self.matriz_inimiga, 'Player')
         frame_tabuleiro.grid(row = 0, column = 0)
         #cria labels de pontuação
@@ -197,6 +199,7 @@ class Tela(Tk):
             Label(frame_tabuleiro_amigo, text = i).grid(row = j+1, column = 0)
         #cria matriz amiga
         self.matriz_amiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        #self.matriz_amiga = self.tabuleiro.alocaNavios()
         self.criaMatrizDeBotao(frame_tabuleiro_amigo, self.matriz_amiga, 'Bot')
         frame_tabuleiro_amigo.grid(row = 0, column = 1, padx = 10)
         #cria labels de pontuação
@@ -247,5 +250,3 @@ class Tela(Tk):
 
 
 tela = Tela()
-    
-#alocaNavios
