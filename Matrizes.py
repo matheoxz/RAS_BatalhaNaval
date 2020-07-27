@@ -69,11 +69,13 @@ class Matriz:
                     matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=1  #alocando o navio 
         return matriz_navios #retorna uma matriz com os navios alocados para poder ser atribuida a matriz do bot/player
 
-    def checaTiro(self, coordenada, mat): #tentar substituir x e y por coordenada
-        if mat[coordenada[0]][coordenada[1]] == 1: 
+    def checaTiro(self, x, y, mat): 
+        if (mat[x][y] == 1): 
             print("navio")
+            return 1
         else:
             print("agua")
+            return 0
 
     def geraTiro(self):
         n=self.defineTamanhoMatriz()
@@ -87,6 +89,7 @@ class Matriz:
 
 l=[1, 1, 0, 0, 1]
 m=Matriz(0,l)
+
 print(m.alocaNavios())
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()

@@ -18,26 +18,28 @@ class Tela(Tk):
 
     def checaTiro(self, x, y, jogador):
         if(jogador == 'Player'):
+            mat = self.tabuleiro.MatrizPlayer
             print('Player', x,y)
             self.tiros_dados_player += 1
             self.tiros_dados_player_lbl.configure(text = str(self.tiros_dados_player))
 
-            if(self.tabuleiro.checaTiro((x, y)) == 0):
+            if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_inimiga[x][y].configure(bg = "#5151B8", state = DISABLED)
                 self.tiros_errados_player += 1
                 self.tiros_errados_player_lbl.configure(text = str(self.tiros_errados_player))
 
-            elif(self.tabuleiro.checaTiro((x, y)) == 1):
+            elif(self.tabuleiro.checaTiro(x, y, mat) == 1):
                 self.matriz_inimiga[x][y].configure(bg = "#FF415A", state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
         
         else:
+            mat = self.tabuleiro.MatrizBot
             self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
-            if(self.tabuleiro.checaTiro((x, y)) == 0):
+            if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
 
-            elif(self.tabuleiro.checaTiro((x, y)) == 1):
+            elif(self.tabuleiro.checaTiro(x, y, mat) == 1):
                 self.matriz_amiga[x][y].configure(bg = "#FF415A", state = DISABLED)
         
     def criaMatrizDeBotao(self, frame, matriz_botoes, jogador):
@@ -246,3 +248,4 @@ class Tela(Tk):
 
 tela = Tela()
     
+#alocaNavios
