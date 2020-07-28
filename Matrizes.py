@@ -23,9 +23,13 @@ class Matriz:
         n=self.defineTamanhoMatriz()
         return n
 
-    def __init__(self, pma, navios):
+    def __init__(self, pma, navios, n = None):
         self.pma=pma #percentual mínimo de espaços com água em relação ao total
         self.navios=navios  #lista contendo a qtde de cada navio
+        self.n = n
+        if(n == None):
+            self.n = self.getN()
+
         self.MatrizPlayer=self.alocaNavios()
         self.MatrizBot=self.alocaNavios()
         #self.MatrizPlayer = [[0 for i in range(self.getN())] for i in range(self.getN())] #retorna um valor de n conforme a qtde
@@ -39,7 +43,7 @@ class Matriz:
         #submarine = 3 espaços
         #destroyer = 2 espaços
         espaco_navio=(5, 4, 3, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
-        n=self.getN()
+        n = self.n
         matriz_navios=[[0 for i in range(n)] for i in range(n)]
         i=0 #Tipo de navio
         qtde_navios=sum(self.navios) #quantidade total de navios
@@ -84,9 +88,9 @@ class Matriz:
 
     
 
-l=[1, 1, 0, 0, 1]
+""" l=[1, 1, 0, 0, 1]
 m=Matriz(0,l)
-print(m.MatrizPlayer)
+print(m.MatrizPlayer) """
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()
 #print(coord)

@@ -1,4 +1,4 @@
-from tkinter import Tk, LabelFrame, Button, PhotoImage, Label, BOTH, Toplevel, DISABLED, HORIZONTAL, W, E, Entry, Scale
+from tkinter import Tk, LabelFrame, Button, PhotoImage, Label, BOTH, Toplevel, DISABLED, HORIZONTAL, W, E, Entry, Scale, messagebox
 from Matrizes import Matriz
 from functools import partial
 
@@ -13,10 +13,14 @@ class Tela(Tk):
         self.title("Batalha Naval")
         self.iconphoto(True, PhotoImage(file = "./icons/Battleship.png"))
         self.state("normal")
+
+        self.tabuleiro = Matriz(self.pma, self.navios)
+        self.n = self.tabuleiro.getN()
+
         self.criaTelaMenu()
         self.mainloop()
 
-    def checaTiro(self, x, y, jogador):
+    def checaTiro(self, x, y, jogador, modo = 'Sandbox', ganhou = False):
         if(jogador == 'Player'):
             mat = self.tabuleiro.MatrizBot
             print('Player', x,y)
@@ -33,51 +37,69 @@ class Tela(Tk):
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
             
-            if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2)):
-                print("ganhou!")
+            if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2) and ganhou == False):
+                messagebox.showinfo('VOCÊ VENCEU!', 'Parabéns!!!')
+                for i, j in Matriz.geraMatriz(Matriz, self.n):
+                    self.checaTiro(i, j, 'Player', ganhou = True)
 
         else:
             mat = self.tabuleiro.MatrizPlayer
-            self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
-
             if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
-                #self.tiros_errados_bot +=1
+                self.tiros_errados_bot +=1
+                self.tiros_errados_bot_lbl.configure(text = str(self.tiros_errados_player))
 
             elif(self.tabuleiro.checaTiro(x, y, mat) == 1):
                 self.matriz_amiga[x][y].configure(bg = "#FF415A", state = DISABLED)
-                #self.tiros_acertados_bot +=1
+                self.tiros_acertados_bot +=1
+                self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_player))
 
+            if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2) and ganhou == False):
+                messagebox.showinfo('VOCÊ PERDEU!', 'Que pena!!!')
+                
             #if (self.tiros_acertados_bot== (navios[0]*5 + navios[1]*4 + navios[2]*3 + navios[3]*3 + navios[4]*2)):
                 #print("perdeu!")
-
+        
+        if modo == 'PvE':
+            i, j = self.tabuleiro_amigo.geraTiro()
+            self.checaTiro(i, j, 'Bot')
 
         
-    def criaMatrizDeBotao(self, frame, matriz_botoes, jogador):
+    def criaMatrizDeBotao(self, frame, matriz_botoes, jogador, modo = 'Sandbox'):
         #pega o valor de n que for dado na tela de menu
         #cria uma matriz de botoes nxn para o player "player" ou "bot"
         #de acordo com a matriz gerada após a alocação de navios
-        n = self.tabuleiro.getN()
         if jogador == 'Player':
-            for i, j in Matriz.geraMatriz(Matriz, n):
-                checaTiro_xy = partial(self.checaTiro, i, j, 'Player')
+            for i, j in Matriz.geraMatriz(Matriz, self.n):
+                checaTiro_xy = partial(self.checaTiro, i, j, 'Player', modo = modo)
                 matriz_botoes[i][j] = Button(frame, text = '~', height = 5, width = 10, bg = "#BFBFF2", command = checaTiro_xy)
                 matriz_botoes[i][j].grid(row = i+1, column = j+1)
         
         else:
-            for i, j in Matriz.geraMatriz(Matriz, n):
-                matriz_botoes[i][j] = Button(frame, text = '~', height = 5, width = 10, bg = "#BFBFF2")
-                self.checaTiro(i, j, 'Bot')
+            for i, j in Matriz.geraMatriz(Matriz, self.n):
+                matriz_botoes[i][j] = Button(frame, text = '~', height = 5, width = 10, bg = "#BFBFF2", state = DISABLED)
+                checaTiro_xy = partial(self.checaTiro, i, j, 'Bot')
                 matriz_botoes[i][j].grid(row = i+1, column = j+1)
 
     def getNumeros(self):
-        self.navios[0] = int(self.carrier_entry.get())
-        self.navios[1] = int(self.battleship_entry.get())
-        self.navios[2] = int(self.cruiser_entry.get())
-        self.navios[3] = int(self.submarine_entry.get())
-        self.navios[4] = int(self.destroyer_entry.get())
-        self.pma = int(self.pma_slider.get())/100
-        self.config_window.destroy()
+        try:
+            self.navios[0] = int(self.carrier_entry.get())
+            self.navios[1] = int(self.battleship_entry.get())
+            self.navios[2] = int(self.cruiser_entry.get())
+            self.navios[3] = int(self.submarine_entry.get())
+            self.navios[4] = int(self.destroyer_entry.get())
+            self.pma = int(self.pma_slider.get())/100
+            self.n_user = int(self.n_entry.get())
+            self.n = self.tabuleiro.getN()
+            assert self.n_user >= self.n
+            if(self.n_user > self.n):
+                self.n = self.n_user
+            assert self.n > 0 and self.n <= 8
+            
+        except:
+            messagebox.showwarning('Tamanho da matriz demasiado grande', 'Diminua o tamanho da matriz ou o número de barcos')
+        else:
+            self.config_window.destroy()
         
     def criaTelaConfigurações(self):
         self.config_window = Toplevel(self)
@@ -96,6 +118,7 @@ class Tela(Tk):
         Label(frame, text = 'Submarine (3 espaços): ').grid(row = 4, column = 0, sticky = W)
         Label(frame, text = 'Destroyer (2 espaços): ').grid(row = 5, column = 0, sticky = W)
         Label(frame, text = 'Percentual de água: ').grid(row = 6, column = 0, sticky = W)
+        Label(frame, text = 'Tamanho do tabuleiro').grid(row = 7, column = 0, sticky = W)
         #insere entradas
         self.carrier_entry = Entry(frame)
         self.carrier_entry.insert(0,str(self.navios[0]))
@@ -112,6 +135,9 @@ class Tela(Tk):
         self.destroyer_entry = Entry(frame)
         self.destroyer_entry.insert(0,str(self.navios[4]))
         self.destroyer_entry.grid(row = 5, column = 1)
+        self.n_entry = Entry(frame)
+        self.n_entry.insert(0, str(self.n))
+        self.n_entry.grid(row = 7, column = 1)
         #insere slider de pma
         self.pma_slider = Scale(frame, from_ = 10, to = 60, orient = HORIZONTAL)
         self.pma_slider.set(self.pma*100)
@@ -119,7 +145,7 @@ class Tela(Tk):
 
         #insere botao de ok
         ok_button = Button(frame, text = "Salvar", command = self.getNumeros)
-        ok_button.grid(row = 7, column = 0, columnspan = 2, sticky = W+E)
+        ok_button.grid(row = 8, column = 0, columnspan = 2, sticky = W+E)
         #poe o frame na tela
         frame.pack(padx = 5, pady = 5)
         pass
@@ -128,17 +154,17 @@ class Tela(Tk):
         #cria janela toplevel
         self.sandbox_window = Toplevel(self)
         self.sandbox_window.title("Sandbox")
-        self.tabuleiro = Matriz(self.pma, self.navios)
+        self.tabuleiro = Matriz(self.pma, self.navios, n = self.n)
         #cria o tabuleiro
         frame_tabuleiro = LabelFrame(self.sandbox_window, text = "Campo Inimigo")
         #coloca labels de coordenadas
-        for i in range(self.tabuleiro.getN()):
+        for i in range(self.n):
             Label(frame_tabuleiro, text = str(i+1)).grid(row = 0, column = i+1)
         alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for i, j in zip(alfabeto, range(self.tabuleiro.getN())):
+        for i, j in zip(alfabeto, range(self.n)):
             Label(frame_tabuleiro, text = i).grid(row = j+1, column = 0)
         #cria matriz de botoes
-        self.matriz_inimiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        self.matriz_inimiga = [[None for i in range(self.n)] for i in range(self.n)]
         #self.matriz_inimiga = self.tabuleiro.alocaNavios()
         self.criaMatrizDeBotao(frame_tabuleiro, self.matriz_inimiga, 'Player')
         frame_tabuleiro.pack()
@@ -166,20 +192,20 @@ class Tela(Tk):
         #cria janela toplevel
         self.sandbox_window = Toplevel(self)
         self.sandbox_window.title("PvE")
-        self.tabuleiro = Matriz(self.pma, self.navios)
-        self.tabuleiro_amigo = Matriz(self.pma, self.navios)
+        self.tabuleiro = Matriz(self.pma, self.navios, n = self.n)
+        self.tabuleiro_amigo = Matriz(self.pma, self.navios, n = self.n)
         #cria o tabuleiro
         frame_tabuleiro = LabelFrame(self.sandbox_window, text = "Campo Inimigo")
         #coloca labels de coordenadas
-        for i in range(self.tabuleiro.getN()):
+        for i in range(self.n):
             Label(frame_tabuleiro, text = str(i+1)).grid(row = 0, column = i+1)
         alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        for i, j in zip(alfabeto, range(self.tabuleiro.getN())):
+        for i, j in zip(alfabeto, range(self.n)):
             Label(frame_tabuleiro, text = i).grid(row = j+1, column = 0)
         #cria matriz inimiga
-        self.matriz_inimiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        self.matriz_inimiga = [[None for i in range(self.n)] for i in range(self.n)]
         #self.matriz_inimiga = self.tabuleiro.alocaNavios()
-        self.criaMatrizDeBotao(frame_tabuleiro, self.matriz_inimiga, 'Player')
+        self.criaMatrizDeBotao(frame_tabuleiro, self.matriz_inimiga, 'Player', modo = 'PvE')
         frame_tabuleiro.grid(row = 0, column = 0)
         #cria labels de pontuação
         frame_pontuacao = LabelFrame(self.sandbox_window, text = 'Pontuação')
@@ -204,14 +230,14 @@ class Tela(Tk):
         #cria o tabuleiro
         frame_tabuleiro_amigo = LabelFrame(self.sandbox_window, text = "Campo Amigo")
         #coloca labels de coordenadas
-        for i in range(self.tabuleiro.getN()):
+        for i in range(self.n):
             Label(frame_tabuleiro_amigo, text = str(i+1)).grid(row = 0, column = i+1)
-        for i, j in zip(alfabeto, range(self.tabuleiro.getN())):
+        for i, j in zip(alfabeto, range(self.n)):
             Label(frame_tabuleiro_amigo, text = i).grid(row = j+1, column = 0)
         #cria matriz amiga
-        self.matriz_amiga = [[None for i in range(self.tabuleiro.getN())] for i in range(self.tabuleiro.getN())]
+        self.matriz_amiga = [[None for i in range(self.n)] for i in range(self.n)]
         #self.matriz_amiga = self.tabuleiro.alocaNavios()
-        self.criaMatrizDeBotao(frame_tabuleiro_amigo, self.matriz_amiga, 'Bot')
+        self.criaMatrizDeBotao(frame_tabuleiro_amigo, self.matriz_amiga, 'Bot', modo= 'PvE')
         frame_tabuleiro_amigo.grid(row = 0, column = 1, padx = 10)
         #cria labels de pontuação
         frame_pontuacao_inimigo = LabelFrame(self.sandbox_window, text = 'Pontuação do Inimigo')
@@ -232,9 +258,7 @@ class Tela(Tk):
         self.tiros_errados_bot_lbl.grid(row = 0, column = 5, sticky = E)
         #poe labels na tela
         frame_pontuacao_inimigo.grid(row =1, column = 1, sticky = W+E, padx = 10)
-        pass
 
-    def TelaFinal(self):
         pass
 
     def criaTelaMenu(self):
