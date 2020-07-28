@@ -44,15 +44,18 @@ class Tela(Tk):
 
         else:
             mat = self.tabuleiro.MatrizPlayer
+            self.tiros_dados_bot += 1
+            self.tiros_dados_bot_lbl.configure(text = str(self.tiros_dados_bot))
+            print('Bot', x,y)
             if(self.tabuleiro.checaTiro(x, y, mat) == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
                 self.tiros_errados_bot +=1
-                self.tiros_errados_bot_lbl.configure(text = str(self.tiros_errados_player))
+                self.tiros_errados_bot_lbl.configure(text = str(self.tiros_errados_bot))
 
             elif(self.tabuleiro.checaTiro(x, y, mat) == 1):
                 self.matriz_amiga[x][y].configure(bg = "#FF415A", state = DISABLED)
                 self.tiros_acertados_bot +=1
-                self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_player))
+                self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
 
             if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2) and ganhou == False):
                 messagebox.showinfo('VOCÊ PERDEU!', 'Que pena!!!')

@@ -1,7 +1,7 @@
 from random import randint
 
 class Matriz:
-    coordenadas = []
+    
     def geraMatriz(self, n):
         for x in range(n):
             for y in range(n):
@@ -29,9 +29,11 @@ class Matriz:
         self.n = n
         if(n == None):
             self.n = self.getN()
-
+        self.coordenadas = []
         self.MatrizPlayer=self.alocaNavios()
         self.MatrizBot=self.alocaNavios()
+
+        print('Coordnadas bot: ', self.coordenadas)
         #self.MatrizPlayer = [[0 for i in range(self.getN())] for i in range(self.getN())] #retorna um valor de n conforme a qtde
         #self.MatrizBot = [[0 for i in range(self.getN())] for i in range(self.getN())]    #de navios escolhida
         return
