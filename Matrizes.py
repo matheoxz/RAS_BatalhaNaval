@@ -90,9 +90,10 @@ class Matriz:
 
     
 
-l=[1, 1, 0, 1]
+l=[1, 1, 1, 1]
 m=Matriz(0,l)
 print(m.MatrizPlayer)
+print(m.MatrizBot)
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()
 #print(coord)
