@@ -8,12 +8,12 @@ class Matriz:
                 yield x,y
 
     def defineTamanhoMatriz(self):
-        espacos=(self.navios[0]*5+self.navios[1]*4+self.navios[2]*3+self.navios[3]*3+self.navios[4]*2)/(1-self.pma)
+        espacos=(self.navios[0]*5+self.navios[1]*4+self.navios[2]*3+self.navios[3]*2)/(1-self.pma)
         if(self.navios[0]!=0 and espacos<25):
             n=5
         elif(self.navios[1]!=0 and espacos<16):
             n=4
-        elif((self.navios[2]!=0 or self.navios[3]!=0) and espacos<9):
+        elif((self.navios[2]!=0) and espacos<9):
             n=3
         else:
             n=int(espacos**0.5)+1
@@ -41,19 +41,19 @@ class Matriz:
     def alocaNavios(self): #gustavo e marcos
         #carrier = 5 espaços
         #battleship = 4 espaços
-        #cruiser = 3 espaços
         #submarine = 3 espaços
         #destroyer = 2 espaços
-        espaco_navio=(5, 4, 3, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:cruiser 3:submarine 4:destroyer
+        espaco_navio=(5, 4, 3, 2)  #espaço que cada navio ocupa idx 0:carrier 1:battleship 2:submarine 3:destroyer
         n = self.n
         matriz_navios=[[0 for i in range(n)] for i in range(n)]
         i=0 #Tipo de navio
         qtde_navios=sum(self.navios) #quantidade total de navios
-        tipo=self.navios[i] #quantidade de um tipo de navio
+        qtde_tipo=self.navios[i] #quantidade de um tipo de navio
         while(qtde_navios>0):
-            while(tipo==0):
+            while(qtde_tipo==0):
                 i+=1  
-                tipo=self.navios[i]
+                qtde_tipo=self.navios[i]
+            tipo=espaco_navio[i]
             verifica=0 
             pos=randint(0,1)   #posição 1:horizontal 0:vertical
             c_i=[randint(0,n-1),randint(0,n-1)] #coordenada inicial e final inicializadas
@@ -71,10 +71,10 @@ class Matriz:
                     #c_i=c_f.copy()
                     step*=-1 #inverte o sentido
             if(verifica<2): #Caso verifica <2 há a possiblidade de alocar o navio no sentido determinado pelo step
-                qtde_navios-=1
-                tipo-=1
                 for x in range(espaco_navio[i]):
-                    matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=1  #alocando o navio 
+                    matriz_navios[c_i[0]+step*abs(pos-1)*x][c_i[1]+step*pos*x]=(tipo,x,qtde_tipo)  #alocando o navio 
+                qtde_navios-=1
+                qtde_tipo-=1
         return matriz_navios #retorna uma matriz com os navios alocados para poder ser atribuida a matriz do bot/player
 
     def checaTiro(self, x, y, mat): 
@@ -90,9 +90,9 @@ class Matriz:
 
     
 
-""" l=[1, 1, 0, 0, 1]
+l=[1, 1, 0, 1]
 m=Matriz(0,l)
-print(m.MatrizPlayer) """
+print(m.MatrizPlayer)
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()
 #print(coord)
