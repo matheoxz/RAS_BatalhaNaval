@@ -81,7 +81,7 @@ class Matriz:
         return mat[x][y]
 
     def geraTiro(self):
-        n=self.defineTamanhoMatriz()
+        n = self.n
         coordenada = (randint(0, n-1), randint(0, n-1))
         while(coordenada in self.coordenadas):
             coordenada = (randint(0, n-1), randint(0, n-1))

@@ -41,6 +41,9 @@ class Tela(Tk):
                 messagebox.showinfo('VOCÊ VENCEU!', 'Parabéns!!!')
                 for i, j in Matriz.geraMatriz(Matriz, self.n):
                     self.checaTiro(i, j, 'Player', ganhou = True)
+                for i, j in Matriz.geraMatriz(Matriz, self.n):
+                    self.checaTiro(i, j, 'Bot', ganhou = True)
+                return
 
         else:
             mat = self.tabuleiro.MatrizPlayer
@@ -57,13 +60,18 @@ class Tela(Tk):
                 self.tiros_acertados_bot +=1
                 self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
 
-            if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2) and ganhou == False):
+            if (self.tiros_acertados_bot== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*3 + self.navios[4]*2) and ganhou == False):
                 messagebox.showinfo('VOCÊ PERDEU!', 'Que pena!!!')
+                for i, j in Matriz.geraMatriz(Matriz, self.n):
+                    self.checaTiro(i, j, 'Player', ganhou = True)
+                for i, j in Matriz.geraMatriz(Matriz, self.n):
+                    self.checaTiro(i, j, 'Bot', ganhou = True)
+                
                 
             #if (self.tiros_acertados_bot== (navios[0]*5 + navios[1]*4 + navios[2]*3 + navios[3]*3 + navios[4]*2)):
                 #print("perdeu!")
         
-        if modo == 'PvE':
+        if modo == 'PvE' and not ganhou:
             i, j = self.tabuleiro_amigo.geraTiro()
             self.checaTiro(i, j, 'Bot')
 
