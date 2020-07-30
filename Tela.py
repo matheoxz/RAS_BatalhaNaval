@@ -27,32 +27,38 @@ class Tela(Tk):
             self.tiros_dados_player += 1
             self.tiros_dados_player_lbl.configure(text = str(self.tiros_dados_player))
 
-            tiro = self.tabuleiro.checaTiro(x, y, mat)
-
+            tiro, afundados = self.tabuleiro.checaTiro(x, y, mat)
+            print('Player', afundados)
             if(tiro == 0):
                 self.matriz_inimiga[x][y].configure(bg = "#5151B8", state = DISABLED)
                 self.tiros_errados_player += 1
                 self.tiros_errados_player_lbl.configure(text = str(self.tiros_errados_player))
+                
 
             elif(tiro[0] == 2):
                 self.matriz_inimiga[x][y].configure(bg = "#2A9D8F", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
+                self.destroyer_acertados_lbl.configure(text = str(afundados[3])+'/'+str(self.navios[3]))
 
             elif(tiro[0] == 3):
                 self.matriz_inimiga[x][y].configure(bg = "#E9C46A", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
+                self.submarine_acertados_lbl.configure(text = str(afundados[2])+'/'+str(self.navios[2]))
 
             elif(tiro[0] == 4):
                 self.matriz_inimiga[x][y].configure(bg = "#F4A261", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
+                self.battleship_acertados_lbl.configure(text = str(afundados[1])+'/'+str(self.navios[1]))
 
             elif(tiro[0] == 5):
                 self.matriz_inimiga[x][y].configure(bg = "#E76F51", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_player += 1
                 self.tiros_acertados_player_lbl.configure(text = str(self.tiros_acertados_player))
+                self.carrier_acertados_lbl.configure(text = str(afundados[0])+'/'+str(self.navios[0]))
+                
             
             if (self.tiros_acertados_player== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*2) and ganhou == False):
                 messagebox.showinfo('VOCÊ VENCEU!', 'Parabéns!!!')
@@ -67,7 +73,8 @@ class Tela(Tk):
             self.tiros_dados_bot += 1
             self.tiros_dados_bot_lbl.configure(text = str(self.tiros_dados_bot))
             print('Bot', x,y)
-            tiro = self.tabuleiro.checaTiro(x, y, mat)
+            tiro, afundados = self.tabuleiro.checaTiro(x, y, mat, player= False)
+            print('Bot', afundados)
             if(tiro == 0):
                 self.matriz_amiga[x][y].configure(bg = "#5151B8", state = DISABLED)
                 self.tiros_errados_bot += 1
@@ -77,21 +84,25 @@ class Tela(Tk):
                 self.matriz_amiga[x][y].configure(bg = "#2A9D8F", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_bot += 1
                 self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
+                self.destroyer_acertados_bot_lbl.configure(text = str(afundados[3])+'/'+str(self.navios[3]))
 
             elif(tiro[0] == 3):
                 self.matriz_amiga[x][y].configure(bg = "#E9C46A", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_bot += 1
                 self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
+                self.submarine_acertados_bot_lbl.configure(text = str(afundados[2])+'/'+str(self.navios[2]))
 
             elif(tiro[0] == 4):
                 self.matriz_amiga[x][y].configure(bg = "#F4A261", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_bot += 1
                 self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
+                self.battleship_acertados_bot_lbl.configure(text = str(afundados[1])+'/'+str(self.navios[1]))
 
             elif(tiro[0] == 5):
                 self.matriz_amiga[x][y].configure(bg = "#E76F51", text = str(tiro[1]+1), fg = 'black', state = DISABLED)
                 self.tiros_acertados_bot += 1
                 self.tiros_acertados_bot_lbl.configure(text = str(self.tiros_acertados_bot))
+                self.carrier_acertados_bot_lbl.configure(text = str(afundados[0])+'/'+str(self.navios[0]))
 
             if (self.tiros_acertados_bot== (self.navios[0]*5 + self.navios[1]*4 + self.navios[2]*3 + self.navios[3]*2) and ganhou == False):
                 messagebox.showinfo('VOCÊ PERDEU!', 'Que pena!!!')
@@ -227,10 +238,27 @@ class Tela(Tk):
         self.tiros_acertados_player_lbl.grid(row = 0, column = 3, sticky = E)
         #label de tiros errados
         Label(frame_pontuacao, text = 'Tiros errados: ').grid(row = 0, column = 4, sticky = W)
-        self.tiros_errados_bot = 0
+        self.tiros_errados_player = 0
         self.tiros_errados_player_lbl = Label(frame_pontuacao, text = str(self.tiros_errados_player))
         self.tiros_errados_player_lbl.grid(row = 0, column = 5, sticky = E)
-
+        #labels navios
+        #carrier
+        Label(frame_pontuacao, text = 'Carrier: ').grid(row = 1, column = 0, sticky = W)
+        self.carrier_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[0]))
+        self.carrier_acertados_lbl.grid(row = 1, column = 1, sticky = E)
+        #battleship
+        Label(frame_pontuacao, text = 'Battleship: ').grid(row = 2, column = 0, sticky = W)
+        self.battleship_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[1]))
+        self.battleship_acertados_lbl.grid(row = 2, column = 1, sticky = E)
+        #submarine
+        Label(frame_pontuacao, text = 'Submarine: ').grid(row = 3, column = 0, sticky = W)
+        self.submarine_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[2]))
+        self.submarine_acertados_lbl.grid(row = 3, column = 1, sticky = E)
+        #destroyer
+        Label(frame_pontuacao, text = 'Destroyer: ').grid(row = 4, column = 0, sticky = W)
+        self.destroyer_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[3]))
+        self.destroyer_acertados_lbl.grid(row = 4, column = 1, sticky = E)
+        
         frame_pontuacao.pack(fill = BOTH)
 
     def PvE(self):
@@ -269,6 +297,23 @@ class Tela(Tk):
         self.tiros_errados_player = 0
         self.tiros_errados_player_lbl = Label(frame_pontuacao, text = str(self.tiros_errados_player))
         self.tiros_errados_player_lbl.grid(row = 0, column = 5, sticky = E)
+        #labels navios
+        #carrier
+        Label(frame_pontuacao, text = 'Carrier: ').grid(row = 1, column = 0, sticky = W)
+        self.carrier_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[0]))
+        self.carrier_acertados_lbl.grid(row = 1, column = 1, sticky = E)
+        #battleship
+        Label(frame_pontuacao, text = 'Battleship: ').grid(row = 2, column = 0, sticky = W)
+        self.battleship_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[1]))
+        self.battleship_acertados_lbl.grid(row = 2, column = 1, sticky = E)
+        #submarine
+        Label(frame_pontuacao, text = 'Submarine: ').grid(row = 3, column = 0, sticky = W)
+        self.submarine_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[2]))
+        self.submarine_acertados_lbl.grid(row = 3, column = 1, sticky = E)
+        #destroyer
+        Label(frame_pontuacao, text = 'Destroyer: ').grid(row = 4, column = 0, sticky = W)
+        self.destroyer_acertados_lbl = Label(frame_pontuacao, text = '0/'+str(self.navios[3]))
+        self.destroyer_acertados_lbl.grid(row = 4, column = 1, sticky = E)
         #poe labels na tela
         frame_pontuacao.grid(row =1, column = 0, sticky = W+E, padx = 10)
 
@@ -301,6 +346,23 @@ class Tela(Tk):
         self.tiros_errados_bot = 0
         self.tiros_errados_bot_lbl = Label(frame_pontuacao_inimigo, text = str(self.tiros_errados_bot))
         self.tiros_errados_bot_lbl.grid(row = 0, column = 5, sticky = E)
+        #labels navios
+        #carrier
+        Label(frame_pontuacao_inimigo, text = 'Carrier: ').grid(row = 1, column = 0, sticky = W)
+        self.carrier_acertados_bot_lbl = Label(frame_pontuacao_inimigo, text = '0/'+str(self.navios[0]))
+        self.carrier_acertados_bot_lbl.grid(row = 1, column = 1, sticky = E)
+        #battleship
+        Label(frame_pontuacao_inimigo, text = 'Battleship: ').grid(row = 2, column = 0, sticky = W)
+        self.battleship_acertados_bot_lbl = Label(frame_pontuacao_inimigo, text = '0/'+str(self.navios[1]))
+        self.battleship_acertados_bot_lbl.grid(row = 2, column = 1, sticky = E)
+        #submarine
+        Label(frame_pontuacao_inimigo, text = 'Submarine: ').grid(row = 3, column = 0, sticky = W)
+        self.submarine_acertados_bot_lbl = Label(frame_pontuacao_inimigo, text = '0/'+str(self.navios[2]))
+        self.submarine_acertados_bot_lbl.grid(row = 3, column = 1, sticky = E)
+        #destroyer
+        Label(frame_pontuacao_inimigo, text = 'Destroyer: ').grid(row = 4, column = 0, sticky = W)
+        self.destroyer_acertados_bot_lbl = Label(frame_pontuacao_inimigo, text = '0/'+str(self.navios[3]))
+        self.destroyer_acertados_bot_lbl.grid(row = 4, column = 1, sticky = E)
         #poe labels na tela
         frame_pontuacao_inimigo.grid(row =1, column = 1, sticky = W+E, padx = 10)
 

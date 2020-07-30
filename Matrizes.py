@@ -30,8 +30,10 @@ class Matriz:
         if(n == None):
             self.n = self.getN()
         self.coordenadas = []
-        self.partes_encontradas = []
-        self.navios_afundados = [0,0,0,0]
+        self.partes_encontradas_player = []
+        self.partes_encontradas_bot = []
+        self.navios_afundados_player = [0,0,0,0]
+        self.navios_afundados_bot = [0,0,0,0]
         self.MatrizPlayer=self.alocaNavios()
         self.MatrizBot=self.alocaNavios()
 
@@ -79,16 +81,30 @@ class Matriz:
                 qtde_tipo-=1
         return matriz_navios #retorna uma matriz com os navios alocados para poder ser atribuida a matriz do bot/player
 
-    def checaTiro(self, x, y, mat): 
+    def checaTiro(self, x, y, mat, player = True): 
+        if player:
+            navios_afundados = self.navios_afundados_player
+            partes_encontradas = self.partes_encontradas_player
+        else:
+            navios_afundados = self.navios_afundados_bot
+            partes_encontradas = self.partes_encontradas_bot
         if(mat[x][y]!=0):
-            self.partes_encontradas.append([mat[x][y][0]]+[mat[x][y][2]])
+            partes_encontradas.append([mat[x][y][0]]+[mat[x][y][2]])
             qtde_tipo=0
             idx=abs(mat[x][y][0]-5)
             for i in range(self.navios[idx]):
-                partes=self.partes_encontradas.count([mat[x][y][0]]+[i+1])
+                partes=partes_encontradas.count([mat[x][y][0]]+[i+1])
                 qtde_tipo+=int(partes/mat[x][y][0])
-            self.navios_afundados[idx]=qtde_tipo
-        return mat[x][y],self.navios_afundados
+            navios_afundados[idx]=qtde_tipo
+
+        if player:
+            self.navios_afundados_player = navios_afundados
+            self.partes_encontradas_player = partes_encontradas
+        else:
+            self.navios_afundados_bot = navios_afundados
+            self.partes_encontradas_bot = partes_encontradas
+
+        return mat[x][y],navios_afundados
 
     def geraTiro(self):
         n = self.n
@@ -100,13 +116,13 @@ class Matriz:
 
     
 
-l=[0, 0, 2, 7]
+""" l=[0, 0, 2, 7]
 m=Matriz(0,l)
 for i in range(m.getN()):
     for j in range(m.getN()):
         m.checaTiro(i,j,m.MatrizPlayer)
 print(m.navios_afundados)
-print(m.partes_encontradas)
+print(m.partes_encontradas) """
 #print(m.checaTiro(1,1, m.MatrizPlayer))
 #coord = m.geraTiro()
 #print(coord)
