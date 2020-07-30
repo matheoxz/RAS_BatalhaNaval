@@ -30,6 +30,8 @@ class Matriz:
         if(n == None):
             self.n = self.getN()
         self.coordenadas = []
+        self.bot_navio = []
+        self.bot_navio_extra = []  #cabou a criatividade para nomes
         self.partes_encontradas_player = []
         self.partes_encontradas_bot = []
         self.navios_afundados_player = [0,0,0,0]
@@ -106,13 +108,73 @@ class Matriz:
 
         return mat[x][y],navios_afundados
 
-    def geraTiro(self):
+    def geraTiro(self, matriz_bot):
         n = self.n
-        coordenada = (randint(0, n-1), randint(0, n-1))
-        while(coordenada in self.coordenadas):
-            coordenada = (randint(0, n-1), randint(0, n-1))
-        self.coordenadas.append(coordenada)
-        return coordenada
+        if(self.bot_navio==[]):
+            c = [randint(0, n-1), randint(0, n-1)]
+            while(c in self.coordenadas):
+                c = [randint(0, n-1), randint(0, n-1)]
+            step=[1, 0, -2, -1, 0, -1, 0]
+        else:
+            step=self.bot_navio.pop() # [Step_linha Step_coluna Tipo Identificador Lados_Verificados Espaços_encontrados_daquele_navio Problema]
+            if(step[5]==0):
+                step[4]+=1 
+                while(1):
+                    if(step[4]==1):
+                        step[0]=1
+                    if(step[4]==2):
+                        step[0]=-1
+                    if(step[4]==3):
+                        step[0]=0
+                        step[1]=1
+                    if(step[4]==4):
+                        step[0]=0
+                        step[1]=-1
+                    c_test=[self.bot_navio[step[5]][0]+step[0],self.bot_navio[step[5]][1]+step[1]]
+                    if(((c_test[0])<0 or (c_test[0])>=n or (c_test[1])<0 or (c_test[1])>=n or (c_test in self.coordenadas)) and step[4]<5):
+                            step[4]+=1    
+                    else:
+                        break 
+                if(step[4]==5):
+                    self.bot_navio=[]
+                    c = [randint(0, n-1), randint(0, n-1)]
+                    while(c in self.coordenadas):
+                        c = [randint(0, n-1), randint(0, n-1)]
+                    self.coordenadas.append(c)
+                    return c
+            if(not step[6]):           # O step é sempre o último elemento
+                c=[self.bot_navio[step[5]][0]+step[0],self.bot_navio[step[5]][1]+step[1]]
+            else:
+                c=[self.bot_navio[0][0]+step[0],self.bot_navio[0][1]+step[1]]
+        if(matriz_bot[c[0]][c[1]]!=0):
+            if(step[5]==-1): #verifica se o primeiro elemento de um tipo
+                step=[0,0,matriz_bot[c[0]][c[1]][0],matriz_bot[c[0]][c[1]][2],0,step[5]+1,0] #monta o próximo passo
+                self.bot_navio.append(c) #coloca na posição 0
+                self.bot_navio.append(step)
+            elif(matriz_bot[c[0]][c[1]][0]==step[2] and matriz_bot[c[0]][c[1]][2]==step[3]):
+                step[5]+=1
+                if(not step[6]):
+                    self.bot_navio.append(c) 
+                else:
+                    self.bot_navio.insert(0,c)
+                if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or (c in self.coordenadas)) and step[6]==0):
+                    step[6]=1
+                    step[0]*=-1   #Inverte o sentido da busca
+                    step[1]*=-1
+                self.bot_navio.append(step)
+            else: #Só pode ocorrer uma vez
+                self.bot_navio_extra.append(c) #Outros elementos que contenham navios diferentes  
+                self.bot_navio.append(step)
+        elif(step[5]!=-1): #Verifica se já está buscando algum navio
+            self.bot_navio.append(step)
+        if(step[5]==(step[2]-1)):
+            self.bot_navio=[]
+            if(self.bot_navio_extra!=[]):
+                self.bot_navio.append(self.bot_navio_extra.pop())
+                step=[0, 0, matriz_bot[self.bot_navio[0][0]][self.bot_navio[0][1]][0], matriz_bot[self.bot_navio[0][0]][self.bot_navio[0][1]][2], 0, 0, 0]
+                self.bot_navio.append(step)
+        self.coordenadas.append(c)
+        return c
 
     
 
