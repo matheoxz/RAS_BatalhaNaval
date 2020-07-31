@@ -91,12 +91,12 @@ class Matriz:
             navios_afundados = self.navios_afundados_bot
             partes_encontradas = self.partes_encontradas_bot
         if(mat[x][y]!=0):
-            partes_encontradas.append([mat[x][y][0]]+[mat[x][y][2]])
+            partes_encontradas.append([mat[x][y][0]]+[mat[x][y][2]]) 
             qtde_tipo=0
             idx=abs(mat[x][y][0]-5)
             for i in range(self.navios[idx]):
                 partes=partes_encontradas.count([mat[x][y][0]]+[i+1])
-                qtde_tipo+=int(partes/mat[x][y][0])
+                qtde_tipo+=int(partes/mat[x][y][0])  
             navios_afundados[idx]=qtde_tipo
 
         if player:
@@ -123,16 +123,17 @@ class Matriz:
                     if(step[4]==1):
                         step[0]=1
                     if(step[4]==2):
-                        step[0]=-1
-                    if(step[4]==3):
                         step[0]=0
                         step[1]=1
+                    if(step[4]==3):
+                        step[0]=-1
+                        step[1]=0
                     if(step[4]==4):
                         step[0]=0
                         step[1]=-1
                     c_test=[self.bot_navio[step[5]][0]+step[0],self.bot_navio[step[5]][1]+step[1]]
                     if(((c_test[0])<0 or (c_test[0])>=n or (c_test[1])<0 or (c_test[1])>=n or (c_test in self.coordenadas)) and step[4]<5):
-                            step[4]+=1    
+                        step[4]+=1    
                     else:
                         break 
                 if(step[4]>=5):
@@ -157,14 +158,12 @@ class Matriz:
                     self.bot_navio.append(c) 
                 else:
                     self.bot_navio.insert(0,c)
-        
                 if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or ([c[0]+step[0],c[1]+step[1]] in self.coordenadas) or matriz_bot[c[0]+step[0]][c[1]+step[1]]==0 or matriz_bot[c[0]+step[0]][c[1]+step[1]][0]!=step[2] or matriz_bot[c[0]+step[0]][c[1]+step[1]][2]!=step[3]) and step[6]==0):
-                    #if(matriz_bot[c[0]+step[0]][c[1]+step[1]][0]!=step[2] or matriz_bot[c[0]+step[0]][c[1]+step[1]][2]!=step[3]):
                     step[6]=1
                     step[0]*=-1   #Inverte o sentido da busca
                     step[1]*=-1
                 self.bot_navio.append(step)
-            else: #Só pode ocorrer uma vez
+            else: 
                 self.bot_navio_extra.append(c) #Outros elementos que contenham navios diferentes  
                 self.bot_navio.append(step)
         elif(step[5]!=-1): #Verifica se já está buscando algum navio
