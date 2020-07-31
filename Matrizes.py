@@ -157,12 +157,14 @@ class Matriz:
                     self.bot_navio.append(c) 
                 else:
                     self.bot_navio.insert(0,c)
-                if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or ([c[0]+step[0],c[1]+step[1]] in self.coordenadas) or matriz_bot[c[0]+step[0]][c[1]+step[1]]==0) and step[6]==0):
+        
+                if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or ([c[0]+step[0],c[1]+step[1]] in self.coordenadas) or matriz_bot[c[0]+step[0]][c[1]+step[1]]==0 or matriz_bot[c[0]+step[0]][c[1]+step[1]][0]!=step[2] or matriz_bot[c[0]+step[0]][c[1]+step[1]][2]!=step[3]) and step[6]==0):
+                    #if(matriz_bot[c[0]+step[0]][c[1]+step[1]][0]!=step[2] or matriz_bot[c[0]+step[0]][c[1]+step[1]][2]!=step[3]):
                     step[6]=1
                     step[0]*=-1   #Inverte o sentido da busca
                     step[1]*=-1
                 self.bot_navio.append(step)
-            else: 
+            else: #Só pode ocorrer uma vez
                 self.bot_navio_extra.append(c) #Outros elementos que contenham navios diferentes  
                 self.bot_navio.append(step)
         elif(step[5]!=-1): #Verifica se já está buscando algum navio
@@ -177,7 +179,6 @@ class Matriz:
         return c
 
     
-
 """ l=[0, 0, 2, 7]
 m=Matriz(0,l)
 for i in range(m.getN()):
