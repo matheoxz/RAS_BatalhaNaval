@@ -135,7 +135,7 @@ class Matriz:
                             step[4]+=1    
                     else:
                         break 
-                if(step[4]==5):
+                if(step[4]>=5):
                     self.bot_navio=[]
                     c = [randint(0, n-1), randint(0, n-1)]
                     while(c in self.coordenadas):
@@ -149,7 +149,7 @@ class Matriz:
         if(matriz_bot[c[0]][c[1]]!=0):
             if(step[5]==-1): #verifica se o primeiro elemento de um tipo
                 step=[0,0,matriz_bot[c[0]][c[1]][0],matriz_bot[c[0]][c[1]][2],0,step[5]+1,0] #monta o próximo passo
-                self.bot_navio.append(c) #coloca na posição 0
+                self.bot_navio.append(c) 
                 self.bot_navio.append(step)
             elif(matriz_bot[c[0]][c[1]][0]==step[2] and matriz_bot[c[0]][c[1]][2]==step[3]):
                 step[5]+=1
@@ -157,12 +157,12 @@ class Matriz:
                     self.bot_navio.append(c) 
                 else:
                     self.bot_navio.insert(0,c)
-                if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or (c in self.coordenadas)) and step[6]==0):
+                if(((c[0]+step[0])<0 or (c[0]+step[0])>=n or (c[1]+step[1])<0 or (c[1]+step[1])>=n or ([c[0]+step[0],c[1]+step[1]] in self.coordenadas) or matriz_bot[c[0]+step[0]][c[1]+step[1]]==0) and step[6]==0):
                     step[6]=1
                     step[0]*=-1   #Inverte o sentido da busca
                     step[1]*=-1
                 self.bot_navio.append(step)
-            else: #Só pode ocorrer uma vez
+            else: 
                 self.bot_navio_extra.append(c) #Outros elementos que contenham navios diferentes  
                 self.bot_navio.append(step)
         elif(step[5]!=-1): #Verifica se já está buscando algum navio
