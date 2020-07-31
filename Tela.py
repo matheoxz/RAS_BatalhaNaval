@@ -24,8 +24,9 @@ class Tela(Tk):
         if(jogador == 'Player'):
             mat = self.tabuleiro.MatrizBot
             print('Player', x,y)
-            self.tiros_dados_player += 1
-            self.tiros_dados_player_lbl.configure(text = str(self.tiros_dados_player))
+            if incrementa:
+                self.tiros_dados_player += 1
+                self.tiros_dados_player_lbl.configure(text = str(self.tiros_dados_player))
 
             tiro, afundados = self.tabuleiro.checaTiro(x, y, mat)
             print('Player', afundados)
@@ -75,8 +76,9 @@ class Tela(Tk):
 
         else:
             mat = self.tabuleiro.MatrizPlayer
-            self.tiros_dados_bot += 1
-            self.tiros_dados_bot_lbl.configure(text = str(self.tiros_dados_bot))
+            if incrementa:
+                self.tiros_dados_bot += 1
+                self.tiros_dados_bot_lbl.configure(text = str(self.tiros_dados_bot))
             print('Bot', x,y)
             tiro, afundados = self.tabuleiro.checaTiro(x, y, mat, player= False)
             print('Bot', afundados)
